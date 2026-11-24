@@ -1,0 +1,78 @@
+DESHIMART - DBA NOTES (Job 4)          Candidate ID: ________   Date: ________
+=====================================================================================
+(Replace [ ] with the real values from job4_maintenance.sql section A.)
+
+1. VERSION AND PATCH LEVEL
+   Product   : MySQL Community Server 8.0 (GPL), 64-bit, Windows
+   Version   : [8.0.4x]  -> major 8, minor 0, patch level = [4x]   (SELECT VERSION();)
+   Service   : MySQL80, start type Automatic, runs as NT SERVICE\MySQL80
+   Port      : 3306, bind-address 0.0.0.0, firewall rule = lab subnet only
+
+2. MAIN CONFIGURATION (my.ini)
+   Config file : C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
+                 (see it in: sc qc MySQL80  -> --defaults-file=...)
+   datadir     : D:/dbdata
+   port        : 3306           bind-address : 0.0.0.0
+   log-bin     : deshimart-bin  (in D:\dbdata)   server-id=1   binlog_format=ROW
+   binlog_expire_logs_seconds = 604800 (7 days)
+   innodb_buffer_pool_size = [128M default / value shown]   max_connections = [151]
+   Password policy: validate_password.length=10, policy=MEDIUM, default_password_lifetime=90
+   log_bin_trust_function_creators = ON (needed to create the Job 2 function and trigger)
+
+3. MEMORY AREAS
+   Shared (global, one for the whole server):
+   - InnoDB buffer pool     : caches table + index pages. This is the biggest and most important area.
+   - InnoDB log buffer      : holds redo changes before they are written to the redo log.
+   - Table open cache / definition cache : open tables and their structure.
+   - Key buffer             : only for MyISAM indexes (small, not used by DeshiMart).
+   Per session (one for each connection):
+   - sort_buffer, join_buffer, read_buffer, read_rnd_buffer, temp tables (tmp_table_size),
+     and the thread stack.
+
+4. BACKGROUND PROCESSES
+   MySQL on Windows is ONE process (mysqld.exe) with many THREADS:
+   - srv_master_thread       : main InnoDB loop (flushing, merging)
+   - io_read / io_write      : read and write data pages
+   - page_flush_coordinator  : writes dirty pages from the buffer pool to disk
+   - log_writer / log_flusher / log_checkpointer : write and flush the redo log, checkpoints
+   - srv_purge_thread        : removes old undo data and deleted rows
+   - dict_stats_thread       : updates optimizer statistics
+   - buf_dump_thread         : saves/loads the buffer pool list at shutdown/startup
+   - event_scheduler         : runs scheduled events
+   - one connection thread for each client session
+   (SELECT NAME FROM performance_schema.threads WHERE TYPE='BACKGROUND';)
+
+5. FILES
+   Data files     : D:\dbdata\deshimart\*.ibd  (one file for each table), ibdata1 (system tablespace)
+   Data dictionary: D:\dbdata\mysql.ibd  (users, table definitions). MySQL has NO separate
+                    "control file" - mysql.ibd + ibdata1 do this job.
+   Redo log       : D:\dbdata\#innodb_redo\#ib_redoNN  (8.0.30+)  [older: ib_logfile0/1]
+   Undo log       : D:\dbdata\undo_001, undo_002
+   Binary logs    : D:\dbdata\deshimart-bin.000001 ... + deshimart-bin.index
+   Error log      : D:\dbdata\<HOSTNAME>.err
+   Temp           : ibtmp1, #innodb_temp
+   Config         : C:\ProgramData\MySQL\MySQL Server 8.0\my.ini   (OUTSIDE the data folder!)
+
+6. WHAT MUST BE BACKED UP
+   - All data files (whole D:\dbdata: *.ibd, ibdata1, mysql.ibd, undo, redo) -> cold backup
+   - Binary logs (deshimart-bin.*) -> needed for point-in-time recovery
+   - Configuration file my.ini     -> copied before every change
+   - Logical hot backup (mysqldump .7z) -> nightly, two locations, 7-day retention
+   - Notes: users and grants live in mysql.ibd (cold backup); mysqldump of deshimart does
+     NOT include users -> keep job4_security.sql to re-create them.
+
+7. BACKUP CHECKLIST
+   [ ] my.ini copied to D:\dbbackup\my.ini.bak_<date>
+   [ ] SET GLOBAL innodb_fast_shutdown=0; net stop MySQL80 (clean shutdown)
+   [ ] Cold copy: robocopy D:\dbdata D:\dbbackup\cold_<date>\dbdata /E
+   [ ] log-bin + server-id added to my.ini, net start MySQL80, SHOW VARIABLES LIKE 'log_bin' = ON
+   [ ] Health check done: service/listener, error log, disk < 80%, connections, locks
+   [ ] Hot backup: mysqldump --single-transaction --source-data=2 --flush-logs ... --result-file
+   [ ] Compressed with 7-Zip, "7z t" = Everything is Ok
+   [ ] Copied to \\LABSERVER\dbbackup2\<CandidateID>, Get-FileHash equal
+   [ ] Nightly script job4_nightly_backup.ps1 written (02:00, keep 7 days)
+   [ ] Recovery test: payments count/total checked after the PITR
+
+8. BACKUP LOCATIONS AND TIMES
+   First : D:\dbbackup          Second : \\LABSERVER\dbbackup2\<CandidateID>
+   Retention : 7 days           Service hours : 08:00-23:00 -> backups run at 02:00

@@ -1,0 +1,71 @@
+DESHIMART - DATABASE SETUP RECORD (Job 1)
+Candidate ID: ____________   Date: ____________   Workstation No: ______
+(Items in [square brackets] = check on YOUR PC and write the real value.)
+
+0. Workstation OSH check (hazards found and action taken, or "none found"):
+   - Cables: power and network cables tidy, under the desk, no trip hazard. [write what you saw]
+   - Power points: not overloaded, no daisy-chained extension boards, no broken plugs.
+   - Chair: adjusted so my back is supported and feet are flat on the floor.
+   - Screen: top of the screen at eye level, about one arm's length away, no glare.
+   - Result: none found  (OR: "Loose cable across walkway - taped it down / told assessor").
+
+1. RDBMS selected and edition/version: MySQL 8.0 Community Server (GPL), 64-bit, Windows
+   [exact version from SELECT VERSION(), e.g. 8.0.4x]
+   Reason (OS, workload, licence, support):
+   - OS: runs natively on 64-bit Windows as a Windows service (MySQL80).
+   - Workload: ~20 staff users, data < 5 GB, +40%/year = about 5 x 1.4^3 = 13.7 GB after
+     3 years. This is small for MySQL; InnoDB gives ACID transactions and row locking.
+   - Features we need later: CHECK constraints, views, procedures, triggers, CTEs, window
+     functions (LAG), ROLLUP + GROUPING(), roles, password policy, binary log for
+     point-in-time recovery.
+   - Licence: Community edition is free (GPL) - no cost for DeshiMart.
+   - Support: large community, offline docs in _Docs, and the same engine exists as a
+     managed cloud service (Amazon RDS, Azure, Cloud SQL) for Job 5.
+
+2. Pre-requisite check (from the offline vendor documentation)
+   Item                        Required (vendor)                         Found on this PC            OK?
+   OS version / 64-bit         Windows 10/11 or Server 2016+ 64-bit       [Windows 11 Pro 64-bit]     Yes
+   CPU cores / RAM             x86-64 CPU; 2+ cores, 4 GB+ RAM            [4 cores / 8 GB]            Yes
+                               (more RAM = bigger buffer pool)
+   Free disk for data and logs ~1 GB install + data growth (~14 GB in    [D: 200 GB free]            Yes
+                               3 years) + logs/backups -> keep 30 GB+
+   Hostname / IP / time zone   Fixed IP on lab subnet, correct time      [LAB-PC12 / 192.168.10.25 / Yes
+                               zone (UTC+06:00 Dhaka)                     UTC+06:00]
+   Listener port and firewall  TCP 3306 (default), inbound allowed       3306 rule "lab subnet only" Yes
+   OS packages / libraries     Microsoft Visual C++ 2015-2022 Redist x64; [installed from D:\Installers] Yes
+                               .NET Framework 4.5.2+ (Installer/Workbench)
+   OS user or service account  Windows service account                   NT SERVICE\MySQL80 (Standard Yes
+                                                                         System Account), full rights on D:\dbdata
+   Environment variables/PATH  PATH must include ...\MySQL Server 8.0\bin  Added (Machine PATH)       Yes
+
+3. Configuration options compared and choice made:
+   Option A = default data folder C:\ProgramData\MySQL\MySQL Server 8.0\Data
+   Option B = separate data drive D:\dbdata
+   Chosen: B (D:\dbdata). Why: keeps data away from the OS drive (C: full or Windows
+   reinstall will not kill the database), room for 40%/year growth, easier backup of one
+   folder, less disk contention with Windows, and it is what the specification asks for.
+   Port: kept the default 3306 (spec says default port; clients and cloud expect it).
+
+4. Server: data directory D:\dbdata   port 3306   service name MySQL80   start type Automatic
+   my.ini: C:\ProgramData\MySQL\MySQL Server 8.0\my.ini   (datadir=D:/dbdata, bind-address=0.0.0.0)
+
+5. Client tools installed (CLI and GUI): mysql.exe command-line client (MySQL Server bin)
+   and MySQL Workbench 8.0 (GUI).
+
+6. Connection used (host/IP, port, database/service, user):
+   Host [192.168.10.25] (or [LAB-PC12]), port 3306, database deshimart, user deshimart.
+   Admin: root (localhost). Session log: mysql --tee=...\Job1\job1_session.log
+
+7. Problems met (including any caused by the assessor) and how solved:
+   [Write what really happened. Examples:]
+   - Service would not start -> read D:\dbdata\<hostname>.err -> wrong datadir path in my.ini
+     (or file saved with BOM) -> fixed path / saved as ANSI -> net start MySQL80 -> OK.
+   - Remote connection refused -> bind-address was 127.0.0.1 -> set 0.0.0.0, restarted service.
+   - "Access denied" for root over IP -> root is localhost-only by design -> used deshimart@'%'.
+   - Firewall rule disabled by assessor -> Enable-NetFirewallRule -DisplayName "MySQL 3306 - Lab subnet only".
+   - None.
+
+8. Seed loaded and row counts match the Specification Sheet: Yes
+   branches 4, categories 10, products 24, stock 96, customers 30, staff 10,
+   orders 90, order_items 232, payments 61, order_history 100000  (all OK).
+   Note: the seed also creates a helper table "digits" (10 rows) used to build order_history.

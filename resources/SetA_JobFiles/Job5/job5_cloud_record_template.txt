@@ -1,0 +1,28 @@
+DESHIMART - CLOUD DATABASE RECORD (Job 5)
+Candidate ID: ________   RDBMS: ____________   Date: ________
+
+1. Service and region
+   Provider: ____________   Service: ______________________   Region: ____________
+
+2. Settings applied (as planned by the IT team)
+   Size / instance class: ______________________
+   Storage: ______ GB     Auto-scaling: On / Off / Not offered
+   Network rule allows only: ______________________ (lab public IP)
+   Encryption at rest: On / Off     Automatic backups: On / Off   Retention: ____ days
+
+3. Connection
+   Endpoint (host:port or connection name): ______________________
+   Client tool used: ______________________
+   How the connection is secured (TLS setting or wallet): ______________________
+
+4. Work done
+   Cloud seed loaded: Yes / No    Row counts match Job 1 (without order_history): Yes / No
+   Order 3001 recorded with ____ items    Backup window set to: ____________
+
+5. Architecture diagram
+   File name: job5_architecture.png   Source file: ______________________
+
+6. Evidence files
+   ______________________
+
+7. Resources deleted or stopped (time, after the assessor said so): ________

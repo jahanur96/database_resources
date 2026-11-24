@@ -1,0 +1,82 @@
+DESHIMART - CLOUD DATABASE RECORD (Job 5)
+Candidate ID: ________   RDBMS: MySQL 8.0   Date: ________
+(Example uses Amazon RDS for MySQL. If the lab gives Azure or Google Cloud, use the same
+ settings with that console - names are in brackets. Replace [ ] with your real values.)
+
+1. Service and region
+   Provider: [AWS]   Service: Amazon RDS for MySQL 8.0 (managed DBaaS)
+             [Azure Database for MySQL - Flexible Server / Google Cloud SQL for MySQL]
+   Region: [ap-south-1 Mumbai / ap-southeast-1 Singapore - the Asia region the assessor gave]
+
+2. Settings applied (as planned by the IT team)
+   Size / instance class: [db.t3.micro or db.t4g.micro]  (smallest free / approved tier)
+                          [Azure: Burstable B1ms | GCP: shared-core db-f1-micro]
+   Storage: 20 GB  gp2/gp3     Auto-scaling: On  (RDS "Enable storage autoscaling", max e.g. 100 GB)
+   Network rule allows only: [203.0.113.25/32] (lab public IP)
+     - RDS: Security group inbound rule MySQL/Aurora TCP 3306, Source = <lab IP>/32
+       (NOT 0.0.0.0/0). Public access = Yes, only so the lab PC can reach it.
+     - Azure: Networking > Firewall rule start/end = lab IP. GCP: Authorized networks = lab IP/32.
+   Encryption at rest: On (RDS "Enable encryption", default aws/rds KMS key)
+   TLS for connections: required - parameter group require_secure_transport = 1
+     (Azure: require_secure_transport ON by default; GCP: "Allow only SSL connections")
+   Admin user/password: admin / strong password (16+ chars, upper, lower, number, symbol)
+   Automatic backups: On     Retention: [7] days (service default - RDS console default is 7)
+   Backup window: 20:00-20:30 UTC = 02:00-02:30 Dhaka (UTC+6) -> outside 08:00-23:00
+   Maintenance window: Sun 21:00-21:30 UTC = Mon 03:00-03:30 Dhaka (also outside service hours)
+
+3. Connection
+   Endpoint (host:port): [deshimart-db.xxxxxxxx.ap-south-1.rds.amazonaws.com:3306]
+   Client tool used: mysql command-line client 8.0 (+ MySQL Workbench 8.0)
+   How the connection is secured:
+     TLS with server certificate check:
+     mysql -h <endpoint> -P 3306 -u admin -p --ssl-mode=VERIFY_IDENTITY --ssl-ca=global-bundle.pem
+     Proof: SHOW SESSION STATUS LIKE 'Ssl_cipher';  -> [TLS_AES_256_GCM_SHA384] (not empty)
+     Server side: require_secure_transport = ON (a connection without TLS is refused)
+
+4. Work done
+   Cloud seed loaded: Yes    Row counts match Job 1 (without order_history): Yes
+     (branches 4, categories 10, products 24, stock 96, customers 30, staff 10,
+      orders 90, order_items 232, payments 61)
+   Order 3001 recorded with 2 items (2 x product 13 @ 210.00, 1 x product 24 @ 220.00 = 640.00, fee 60)
+   Backup window set to: 20:00-20:30 UTC (02:00-02:30 Dhaka)
+
+5. Architecture diagram
+   File name: job5_architecture.png   Source file: job5_architecture.drawio
+   Draw with AWS icons (draw.io > More Shapes > AWS 2025):
+   [Lab PC (MySQL client)] --TLS 3306--> [Internet] --> [AWS Cloud > Region ap-south-1 >
+   VPC > Security Group (allow lab IP/32 :3306) > Amazon RDS for MySQL (db.t3.micro,
+   20 GB gp3 + autoscaling, encrypted with KMS)] ---> [Automated backups / snapshots (S3, 7 days)]
+
+6. Evidence files
+   job5_cloud_record.txt, job5_architecture.png (+ .drawio), job5_cloud_evidence.png
+   (settings page + connection + Ssl_cipher + row counts + order 3001 + branch report),
+   job5_session.log, job5_cloud_queries.sql
+
+7. Resources deleted or stopped (time, after the assessor said so): [hh:mm]
+   RDS > Databases > deshimart-db > Actions > Delete
+   (untick "Create final snapshot" only if the assessor allows; tick "I acknowledge")
+
+---------------------------------------------------------------------
+STEP-BY-STEP CONSOLE CHECKLIST (Amazon RDS)
+---------------------------------------------------------------------
+[ ] 1  Sign in with the LAB account only; pick the Asia REGION the assessor gave (top-right).
+[ ] 2  RDS > Create database > Standard create > Engine: MySQL > Version: MySQL 8.0.x.
+[ ] 3  Templates: Free tier (or the approved tier).
+[ ] 4  DB instance identifier: deshimart-db. Master username: admin. Strong password.
+[ ] 5  Instance class: db.t3.micro / db.t4g.micro (smallest allowed).
+[ ] 6  Storage: gp3 (or gp2), 20 GiB. Tick "Enable storage autoscaling".
+[ ] 7  Connectivity: default VPC, Public access = Yes, new security group "deshimart-sg".
+[ ] 8  Security group > Inbound rules > edit: Type MySQL/Aurora, Port 3306,
+       Source = <lab public IP>/32. Delete any 0.0.0.0/0 rule.
+[ ] 9  Additional configuration: Initial database name = deshimart (optional - the SQL file also creates it).
+[ ] 10 Backup: Enable automated backups, retention = default (7 days on the console),
+       Backup window = Select window: start 20:00 UTC, duration 0.5 h.
+[ ] 11 Encryption: Enable encryption (default KMS key).
+[ ] 12 Maintenance window: Sun 21:00 UTC, 0.5 h.
+[ ] 13 Create a parameter group (family mysql8.0) with require_secure_transport = 1,
+       attach it to the instance (Modify > Apply immediately; reboot if status says pending-reboot).
+[ ] 14 Wait for status "Available". Copy the Endpoint and Port. Screenshot the settings page.
+[ ] 15 Connect with --ssl-mode=VERIFY_IDENTITY, run job5_cloud_queries.sql
+       (create database, source cloud seed, row counts, order 3001, branch report).
+[ ] 16 Draw the architecture, save png + drawio. Fill in this record.
+[ ] 17 Delete/stop the instance ONLY when the assessor says so; write down the time.
