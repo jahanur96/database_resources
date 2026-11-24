@@ -2,3 +2,226 @@ E:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld, Version: 8.0.30 (MySQL Comm
 TCP Port: 3306, Named Pipe: /tmp/mysql.sock
 Time                 Id Command    Argument
 2026-11-24T18:55:58.424547Z	   21 Query	SET GLOBAL general_log = 'ON'
+2026-11-24T18:56:49.535077Z	   21 Query	use dashimart
+2026-11-24T18:56:49.537152Z	   21 Query	SELECT DATABASE()
+2026-11-24T18:56:49.541619Z	   21 Query	SET autocommit = 1
+2026-11-24T18:59:14.428119Z	   21 Query	CREATE TABLE suppliers (
+  supplier_id       INT          NOT NULL,
+  supplier_name     VARCHAR(80)  NOT NULL,
+  trade_licence_no  VARCHAR(30)  NOT NULL,
+  phone             VARCHAR(15)  NOT NULL,
+  supplies          VARCHAR(80)  NULL,          -- e.g. "Rice, pulses and flour" (from the paper PO)
+  CONSTRAINT pk_suppliers         PRIMARY KEY (supplier_id),
+  CONSTRAINT uq_supplier_licence  UNIQUE (trade_licence_no)
+) ENGINE=InnoDB
+2026-11-24T18:59:15.467519Z	   21 Query	CREATE TABLE purchase_orders (
+  po_id          INT          NOT NULL,
+  supplier_id    INT          NOT NULL,
+  branch_id      INT          NOT NULL,
+  po_date        DATE         NOT NULL,
+  status         VARCHAR(10)  NOT NULL DEFAULT 'DRAFT',
+  expected_date  DATE         NULL,
+  raised_by      INT          NULL,             -- staff who raised the PO (3NF: name lives in staff)
+  CONSTRAINT pk_purchase_orders PRIMARY KEY (po_id),
+  CONSTRAINT fk_po_supplier  FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id),
+  CONSTRAINT fk_po_branch    FOREIGN KEY (branch_id)   REFERENCES branches(branch_id),
+  CONSTRAINT fk_po_staff     FOREIGN KEY (raised_by)   REFERENCES staff(staff_id),
+  CONSTRAINT ck_po_status    CHECK (status IN ('DRAFT','SENT','RECEIVED','CANCELLED'))
+) ENGINE=InnoDB
+2026-11-24T18:59:16.106652Z	   21 Query	CREATE TABLE po_items (
+  po_id        INT            NOT NULL,
+  line_no      INT            NOT NULL,
+  product_id   INT            NOT NULL,
+  qty_ordered  INT            NOT NULL,
+  unit_cost    DECIMAL(10,2)  NOT NULL,
+  CONSTRAINT pk_po_items      PRIMARY KEY (po_id, line_no),
+  CONSTRAINT fk_poi_po        FOREIGN KEY (po_id)      REFERENCES purchase_orders(po_id),
+  CONSTRAINT fk_poi_product   FOREIGN KEY (product_id) REFERENCES products(product_id),
+  CONSTRAINT ck_poi_qty       CHECK (qty_ordered > 0),
+  CONSTRAINT ck_poi_cost      CHECK (unit_cost > 0)
+) ENGINE=InnoDB
+2026-11-24T18:59:16.434589Z	   21 Query	CREATE TABLE po_status_log (
+  log_id      INT          NOT NULL AUTO_INCREMENT,
+  po_id       INT          NOT NULL,
+  old_status  VARCHAR(10)  NULL,
+  new_status  VARCHAR(10)  NOT NULL,
+  changed_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT pk_po_status_log PRIMARY KEY (log_id),
+  CONSTRAINT fk_log_po        FOREIGN KEY (po_id) REFERENCES purchase_orders(po_id)
+) ENGINE=InnoDB
+2026-11-24T18:59:58.077516Z	   21 Query	START TRANSACTION
+2026-11-24T19:00:10.289489Z	   21 Query	INSERT INTO suppliers (supplier_id, supplier_name, trade_licence_no, phone) VALUES
+  (1, 'Shapla Agro Traders',   'TRAD/DNCC/04417/2024', '01711302214'),
+  (2, 'Padma Edible Oils Ltd', 'TRAD/DSCC/11902/2023', '01711302214')
+2026-11-24T19:00:22.961868Z	   21 Query	INSERT INTO purchase_orders (po_id, supplier_id, branch_id, po_date, status, expected_date) VALUES
+  (8001, 1, 1, '2026-07-01', 'SENT', '2026-07-08'),
+  (8002, 2, 2, '2026-07-02', 'SENT', '2026-07-06'),
+  (8003, 1, 3, '2026-07-03', 'SENT', '2026-07-10')
+2026-11-24T19:00:36.724994Z	   21 Query	INSERT INTO po_items (po_id, line_no, product_id, qty_ordered, unit_cost) VALUES
+  (8001, 1,  1,  40, 365.00),
+  (8001, 2,  3,  60, 112.00),
+  (8002, 1,  5,  24, 790.00),
+  (8003, 1, 10, 100,  42.50)
+2026-11-24T19:00:49.977114Z	   21 Query	COMMIT
+2026-11-24T19:01:11.618087Z	   21 Query	SELECT (SELECT COUNT(*) FROM suppliers)       AS suppliers_2,
+       (SELECT COUNT(*) FROM purchase_orders) AS pos_3,
+       (SELECT COUNT(*) FROM po_items)        AS lines_4
+LIMIT 0, 1000
+2026-11-24T19:01:11.781133Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:01:11.805685Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1324
+2026-11-24T19:01:11.807045Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1324
+2026-11-24T19:01:57.771535Z	   21 Query	INSERT INTO suppliers (supplier_id, supplier_name, trade_licence_no, phone)
+ VALUES (3, 'Test Traders', 'TRAD/DNCC/04417/2024', '01900000000')
+2026-11-24T19:02:56.492087Z	   21 Query	INSERT INTO purchase_orders (po_id, supplier_id, branch_id, po_date) VALUES (8004, 999, 1, '2026-07-04')
+2026-11-24T19:03:32.939686Z	   21 Query	INSERT INTO purchase_orders (po_id, supplier_id, branch_id, po_date, status) VALUES (8005, 1, 1, '2026-07-04', 'APPROVED')
+2026-11-24T19:04:08.645032Z	   21 Query	INSERT INTO po_items (po_id, line_no, product_id, qty_ordered, unit_cost) VALUES (8002, 2, 6, 0, 248.00)
+2026-11-24T19:04:37.838266Z	   21 Query	SELECT (SELECT COUNT(*) FROM suppliers)       AS suppliers_2,
+       (SELECT COUNT(*) FROM purchase_orders) AS pos_3,
+       (SELECT COUNT(*) FROM po_items)        AS lines_4
+LIMIT 0, 1000
+2026-11-24T19:04:37.879300Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:04:37.882145Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1340
+2026-11-24T19:04:37.883289Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1340
+2026-11-24T19:05:28.146921Z	   21 Query	CREATE OR REPLACE VIEW v_open_pos AS
+SELECT po.po_id, s.supplier_name, s.phone AS supplier_phone, b.branch_name,
+       po.po_date, po.expected_date
+FROM purchase_orders po
+JOIN suppliers s ON s.supplier_id = po.supplier_id
+JOIN branches  b ON b.branch_id   = po.branch_id
+WHERE po.status = 'SENT'
+2026-11-24T19:05:52.941797Z	   21 Query	CREATE INDEX ix_po_status_expected ON purchase_orders (status, expected_date)
+2026-11-24T19:06:25.881852Z	   21 Query	CREATE PROCEDURE sp_delay_po(IN p_po_id INT, IN p_days INT)
+  UPDATE purchase_orders
+  SET expected_date = DATE_ADD(expected_date, INTERVAL p_days DAY)
+  WHERE po_id = p_po_id
+2026-11-24T19:07:00.620810Z	   21 Query	CREATE FUNCTION fn_line_value(p_qty INT, p_unit_cost DECIMAL(10,2))
+  RETURNS DECIMAL(12,2)
+  DETERMINISTIC NO SQL
+  RETURN p_qty * p_unit_cost
+2026-11-24T19:07:19.005449Z	   21 Query	CREATE TRIGGER trg_po_status_log
+AFTER UPDATE ON purchase_orders
+FOR EACH ROW
+  INSERT INTO po_status_log (po_id, old_status, new_status, changed_at)
+  SELECT NEW.po_id, OLD.status, NEW.status, NOW()
+  FROM DUAL
+  WHERE NOT (OLD.status <=> NEW.status)
+2026-11-24T19:08:08.675721Z	   21 Query	SELECT po_id, expected_date FROM purchase_orders WHERE po_id = 8002
+LIMIT 0, 1000
+2026-11-24T19:08:08.885975Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:08:08.894709Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1358
+2026-11-24T19:08:08.896107Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1358
+2026-11-24T19:08:08.967627Z	   20 Query	SHOW INDEX FROM `dashimart`.`purchase_orders`
+2026-11-24T19:08:24.621159Z	   21 Query	CALL sp_delay_po(8002, 5)
+2026-11-24T19:08:31.179147Z	   21 Query	SELECT po_id, expected_date FROM purchase_orders WHERE po_id = 8002
+LIMIT 0, 1000
+2026-11-24T19:08:31.221140Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:08:31.222492Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1366
+2026-11-24T19:08:31.223317Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1366
+2026-11-24T19:08:31.225636Z	   20 Query	SHOW INDEX FROM `dashimart`.`purchase_orders`
+2026-11-24T19:08:39.397536Z	   21 Query	CALL sp_delay_po(8002, 5)
+2026-11-24T19:08:42.324650Z	   21 Query	SELECT po_id, expected_date FROM purchase_orders WHERE po_id = 8002
+LIMIT 0, 1000
+2026-11-24T19:08:42.346614Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:08:42.348185Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1374
+2026-11-24T19:08:42.349141Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1374
+2026-11-24T19:08:42.352118Z	   20 Query	SHOW INDEX FROM `dashimart`.`purchase_orders`
+2026-11-24T19:09:32.143377Z	   21 Query	SELECT * FROM po_status_log
+LIMIT 0, 1000
+2026-11-24T19:09:32.166730Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:09:32.169013Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1377
+2026-11-24T19:09:32.170558Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1377
+2026-11-24T19:09:32.173504Z	   20 Query	SHOW INDEX FROM `dashimart`.`po_status_log`
+2026-11-24T19:09:37.580774Z	   21 Query	UPDATE purchase_orders SET status = 'RECEIVED' WHERE po_id = 8001
+2026-11-24T19:09:37.611811Z	   21 Query	INSERT INTO po_status_log (po_id, old_status, new_status, changed_at)
+  SELECT NEW.po_id, OLD.status, NEW.status, NOW()
+  FROM DUAL
+  WHERE NOT (OLD.status <=> NEW.status)
+2026-11-24T19:09:40.708147Z	   21 Query	SELECT * FROM po_status_log
+LIMIT 0, 1000
+2026-11-24T19:09:41.143297Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:09:41.145421Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1384
+2026-11-24T19:09:41.146358Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1384
+2026-11-24T19:09:41.149126Z	   20 Query	SHOW INDEX FROM `dashimart`.`po_status_log`
+2026-11-24T19:10:07.131201Z	   21 Query	SELECT fn_line_value(24, 790.00) AS line_value
+LIMIT 0, 1000
+2026-11-24T19:10:07.190618Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:10:07.192444Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1387
+2026-11-24T19:10:07.193277Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1387
+2026-11-24T19:10:47.265168Z	   21 Query	SELECT * FROM v_open_pos
+LIMIT 0, 1000
+2026-11-24T19:10:47.379496Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:10:47.381152Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1390
+2026-11-24T19:10:47.382038Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1390
+2026-11-24T19:10:47.384744Z	   20 Query	SHOW INDEX FROM `dashimart`.`v_open_pos`
+2026-11-24T19:11:41.128075Z	   21 Query	SELECT TABLE_NAME AS view_name
+FROM information_schema.VIEWS
+WHERE TABLE_SCHEMA = 'deshimart' AND VIEW_DEFINITION LIKE '%expected_date%'
+LIMIT 0, 1000
+2026-11-24T19:11:41.472113Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:11:41.475695Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1393
+2026-11-24T19:11:41.476726Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1393
+2026-11-24T19:11:41.480132Z	   20 Query	SHOW INDEX FROM `information_schema`.`VIEWS`
+2026-11-24T19:12:01.487405Z	   20 Query	SHOW DATABASES
+2026-11-24T19:12:01.826894Z	   20 Query	SHOW FULL TABLES FROM `dashimart`
+2026-11-24T19:12:02.072572Z	   20 Query	SHOW PROCEDURE STATUS WHERE Db='dashimart'
+2026-11-24T19:12:02.150305Z	   20 Query	SHOW FUNCTION STATUS WHERE Db='dashimart'
+2026-11-24T19:12:02.188483Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`branches`
+2026-11-24T19:12:02.370835Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`categories`
+2026-11-24T19:12:02.381583Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`customers`
+2026-11-24T19:12:02.415466Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`digits`
+2026-11-24T19:12:02.418598Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`order_history`
+2026-11-24T19:12:02.449521Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`order_items`
+2026-11-24T19:12:02.451740Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`orders`
+2026-11-24T19:12:02.467514Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`payments`
+2026-11-24T19:12:02.470753Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`po_items`
+2026-11-24T19:12:02.476801Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`po_status_log`
+2026-11-24T19:12:02.479612Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`products`
+2026-11-24T19:12:02.570886Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`purchase_orders`
+2026-11-24T19:12:02.573276Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`staff`
+2026-11-24T19:12:02.575474Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`stock`
+2026-11-24T19:12:02.577830Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`suppliers`
+2026-11-24T19:12:02.580470Z	   21 Query	SHOW FULL COLUMNS FROM `dashimart`.`v_open_pos`
+2026-11-24T19:12:27.315395Z	   21 Query	SELECT TABLE_NAME AS view_name
+FROM information_schema.VIEWS
+WHERE TABLE_SCHEMA = 'deshimart' AND VIEW_DEFINITION LIKE '%expected_date%'
+LIMIT 0, 1000
+2026-11-24T19:12:27.352812Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:12:27.356566Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1430
+2026-11-24T19:12:27.358081Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1430
+2026-11-24T19:12:27.360959Z	   20 Query	SHOW INDEX FROM `information_schema`.`VIEWS`
+2026-11-24T19:13:50.002609Z	   21 Query	ALTER TABLE purchase_orders RENAME COLUMN expected_date TO due_date
+2026-11-24T19:13:57.259228Z	   21 Query	ALTER TABLE suppliers ADD CONSTRAINT uq_supplier_phone UNIQUE (phone)
+2026-11-24T19:15:56.723405Z	   21 Query	CREATE OR REPLACE VIEW v_open_pos AS
+SELECT po.po_id, s.supplier_name, s.phone AS supplier_phone, b.branch_name,
+       po.po_date, po.due_date
+FROM purchase_orders po
+JOIN suppliers s ON s.supplier_id = po.supplier_id
+JOIN branches  b ON b.branch_id   = po.branch_id
+WHERE po.status = 'SENT'
+2026-11-24T19:17:06.748420Z	   21 Query	CREATE PROCEDURE sp_delay_po(IN p_po_id INT, IN p_days INT)
+  UPDATE purchase_orders
+  SET due_date = DATE_ADD(due_date, INTERVAL p_days DAY)
+  WHERE po_id = p_po_id
+2026-11-24T19:17:17.805572Z	   21 Query	DROP PROCEDURE IF EXISTS sp_delay_po
+2026-11-24T19:17:24.608791Z	   21 Query	CREATE PROCEDURE sp_delay_po(IN p_po_id INT, IN p_days INT)
+  UPDATE purchase_orders
+  SET due_date = DATE_ADD(due_date, INTERVAL p_days DAY)
+  WHERE po_id = p_po_id
+2026-11-24T19:17:39.937649Z	   21 Query	SELECT INDEX_NAME, SEQ_IN_INDEX, COLUMN_NAME
+FROM information_schema.STATISTICS
+WHERE TABLE_SCHEMA = 'deshimart' AND INDEX_NAME = 'ix_po_status_expected'
+LIMIT 0, 1000
+2026-11-24T19:17:40.120496Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:17:40.122529Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1451
+2026-11-24T19:17:40.123405Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1451
+2026-11-24T19:17:40.125421Z	   20 Query	SHOW INDEX FROM `information_schema`.`STATISTICS`
+2026-11-24T19:17:57.026589Z	   21 Query	CHECK TABLE v_open_pos
+2026-11-24T19:17:57.146700Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:17:57.148161Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1454
+2026-11-24T19:17:57.148960Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1454
+2026-11-24T19:18:10.095774Z	   21 Query	SELECT * FROM v_open_pos
+LIMIT 0, 1000
+2026-11-24T19:18:10.132227Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:18:10.135418Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1457
+2026-11-24T19:18:10.136456Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1457
+2026-11-24T19:18:10.139831Z	   20 Query	SHOW INDEX FROM `dashimart`.`v_open_pos`
