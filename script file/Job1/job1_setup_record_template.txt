@@ -1,0 +1,21 @@
+DESHIMART - DATABASE SETUP RECORD (Job 1)
+Candidate ID: ____________   Date: ____________   Workstation No: ______
+0. Workstation OSH check (hazards found and action taken, or "none found"): ____________
+1. RDBMS selected and edition/version: ______________________________
+   Reason (OS, workload, licence, support): __________________________
+2. Pre-requisite check (from the offline vendor documentation)
+   Item                       Required (vendor)    Found on this PC    OK?
+   OS version / 64-bit
+   CPU cores / RAM
+   Free disk for data and logs
+   Hostname / IP / time zone
+   Listener port and firewall
+   OS packages / libraries
+   OS user or service account
+   Environment variables / PATH
+3. Configuration options compared and choice made: ____________________
+4. Server: data directory ________ port ____ service name ________ start type ______
+5. Client tools installed (CLI and GUI): _____________________________
+6. Connection used (host/IP, port, database/service, user): __________
+7. Problems met (including any caused by the assessor) and how solved: _____
+8. Seed loaded and row counts match the Specification Sheet: Yes / No

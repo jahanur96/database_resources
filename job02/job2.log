@@ -1,0 +1,4 @@
+E:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld, Version: 8.0.30 (MySQL Community Server - GPL). started with:
+TCP Port: 3306, Named Pipe: /tmp/mysql.sock
+Time                 Id Command    Argument
+2026-11-24T18:55:58.424547Z	   21 Query	SET GLOBAL general_log = 'ON'
