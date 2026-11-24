@@ -225,3 +225,37 @@ LIMIT 0, 1000
 2026-11-24T19:18:10.135418Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1457
 2026-11-24T19:18:10.136456Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1457
 2026-11-24T19:18:10.139831Z	   20 Query	SHOW INDEX FROM `dashimart`.`v_open_pos`
+2026-11-24T19:28:45.228675Z	   21 Query	SELECT TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'deshimart' AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME
+LIMIT 0, 1000
+2026-11-24T19:28:45.392457Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:28:45.395516Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1461
+2026-11-24T19:28:45.396654Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1461
+2026-11-24T19:28:45.399824Z	   20 Query	SHOW INDEX FROM `information_schema`.`KEY_COLUMN_USAGE`
+2026-11-24T19:28:57.835163Z	   21 Query	SHOW INDEX FROM order_history
+2026-11-24T19:28:57.943682Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:28:57.945337Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1464
+2026-11-24T19:28:57.946288Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1464
+2026-11-24T19:29:09.932476Z	   21 Query	SHOW GRANTS
+2026-11-24T19:29:10.066363Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:29:10.078468Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1467
+2026-11-24T19:29:10.079368Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1467
+2026-11-24T19:36:24.205469Z	   21 Query	SELECT TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'deshimart' AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME
+LIMIT 0, 1000
+2026-11-24T19:36:24.228530Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:36:24.231052Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1470
+2026-11-24T19:36:24.232156Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1470
+2026-11-24T19:36:24.235282Z	   20 Query	SHOW INDEX FROM `information_schema`.`KEY_COLUMN_USAGE`
+2026-11-24T19:36:34.389579Z	   21 Query	SHOW INDEX FROM order_history
+2026-11-24T19:36:34.429416Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:36:34.430977Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1473
+2026-11-24T19:36:34.435403Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1473
+2026-11-24T19:36:44.754848Z	   21 Query	SHOW GRANTS
+2026-11-24T19:36:44.831174Z	   20 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 21
+2026-11-24T19:36:44.832702Z	   20 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 1476
+2026-11-24T19:36:44.833455Z	   20 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 1476
