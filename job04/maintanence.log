@@ -1,0 +1,37 @@
+E:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld, Version: 8.0.30 (MySQL Community Server - GPL). started with:
+TCP Port: 3306, Named Pipe: /tmp/mysql.sock
+Time                 Id Command    Argument
+2026-11-25T18:31:55.300064Z	    9 Query	set global log_output = 'file'
+2026-11-25T18:31:55.303930Z	    9 Query	set global general_log_file = 'D:/Database/job04/maintanence.log'
+E:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld, Version: 8.0.30 (MySQL Community Server - GPL). started with:
+TCP Port: 3306, Named Pipe: /tmp/mysql.sock
+Time                 Id Command    Argument
+2026-11-25T18:31:55.385392Z	    9 Query	set global general_log = 'on'
+2026-11-25T18:31:55.389718Z	    9 Query	use deshimart
+2026-11-25T18:31:59.953850Z	    9 Query	use deshimart
+2026-11-25T18:32:28.405317Z	    9 Query	use dashimart
+2026-11-25T18:32:28.496565Z	    9 Query	SELECT DATABASE()
+2026-11-25T18:32:44.708266Z	    9 Query	select version() as mysql_version,
+@@version_comment as edition,
+@@version_compile_os as os_name,
+@@version_compile_machine as architecture,
+@@hostname as host_name,
+@@port as port,
+@@basedir as base_directory,
+@@datadir as data_directory,
+@@server_uuid as server_uuid
+LIMIT 0, 1000
+2026-11-25T18:32:44.743031Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-25T18:32:45.030118Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 78
+2026-11-25T18:32:45.041738Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 78
+2026-11-25T18:33:21.610685Z	    9 Query	select thread_id, name, type, processlist_state
+from performance_schema.threads
+where type = 'background'
+order by name
+LIMIT 0, 1000
+2026-11-25T18:33:21.662553Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-25T18:33:21.665315Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 80
+2026-11-25T18:33:21.666761Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 80
+2026-11-25T18:33:21.685493Z	    8 Query	SHOW INDEX FROM `performance_schema`.`threads`
+2026-11-25T18:38:49.322929Z	    9 Quit	
+2026-11-25T18:38:49.391255Z	    8 Quit	

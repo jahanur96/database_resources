@@ -1,0 +1,418 @@
+E:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld, Version: 8.0.30 (MySQL Community Server - GPL). started with:
+TCP Port: 3306, Named Pipe: /tmp/mysql.sock
+Time                 Id Command    Argument
+2026-11-24T13:36:31.944841Z	    9 Query	select user, account_locked
+from mysql.user
+where user = 'temp_vendor'
+LIMIT 0, 1000
+2026-11-24T13:36:31.965432Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T13:36:31.967138Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 117
+2026-11-24T13:36:31.968384Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 117
+2026-11-24T13:36:31.972274Z	    8 Query	SHOW INDEX FROM `mysql`.`user`
+2026-11-24T13:40:31.718040Z	    9 Query	create role if not exists deshimart_cashier, deshimart_analyst
+2026-11-24T13:41:01.904757Z	    9 Query	SHOW GRANTS FOR 'deshimart_cashier'
+2026-11-24T13:41:01.924116Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T13:41:01.925958Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 124
+2026-11-24T13:41:01.926854Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 124
+2026-11-24T13:41:08.620711Z	    9 Query	SHOW GRANTS FOR 'deshimart_analyst'
+2026-11-24T13:41:08.648664Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T13:41:08.650276Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 126
+2026-11-24T13:41:08.651500Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 126
+2026-11-24T13:44:46.666482Z	    9 Query	GRANT SELECT ON deshimart.products
+TO 'deshimart_cashier'
+2026-11-24T13:44:47.075561Z	    9 Query	GRANT SELECT ON deshimart.stock
+TO 'deshimart_cashier'
+2026-11-24T13:44:47.129654Z	    9 Query	GRANT INSERT ON deshimart.orders
+TO 'deshimart_cashier'
+2026-11-24T13:44:47.165718Z	    9 Query	GRANT INSERT ON deshimart.order_items
+TO 'deshimart_cashier'
+2026-11-24T13:44:47.196072Z	    9 Query	GRANT UPDATE(qty_on_hand) ON deshimart.stock
+TO 'deshimart_cashier'
+2026-11-24T13:44:51.586970Z	    9 Query	SHOW GRANTS FOR 'deshimart_cashier'
+2026-11-24T13:44:51.610287Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T13:44:51.612093Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 139
+2026-11-24T13:44:51.613004Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 139
+2026-11-24T13:49:02.941824Z	    9 Query	Create VIEW v_customers_masked AS
+SELECT
+    customer_id,
+    full_name,
+	
+    CONCAT(
+        LEFT(phone, 3),
+        '******',
+        RIGHT(phone, 2)
+    ) AS masked_phone
+FROM customers
+2026-11-24T13:49:28.763837Z	    9 Query	select * from v_customers_masked
+LIMIT 0, 1000
+2026-11-24T13:49:28.862689Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T13:49:28.864587Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 145
+2026-11-24T13:49:28.865578Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 145
+2026-11-24T13:49:28.868231Z	    8 Query	SHOW INDEX FROM `deshimart`.`v_customers_masked`
+2026-11-24T13:49:43.889765Z	    9 Query	GRANT SELECT ON deshimart.v_customers_masked
+TO 'deshimart_analyst'
+2026-11-24T13:49:48.749958Z	    9 Query	GRANT SELECT ON deshimart.order_items
+TO 'deshimart_analyst'
+2026-11-24T13:49:52.629775Z	    9 Query	GRANT SELECT ON deshimart.payments
+TO 'deshimart_analyst'
+2026-11-24T13:50:17.163601Z	    9 Query	SHOW GRANTS FOR 'deshimart_analyst'
+2026-11-24T13:50:17.184628Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T13:50:17.187024Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 157
+2026-11-24T13:50:17.188514Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 157
+2026-11-24T13:53:35.469716Z	    9 Query	CREATE USER IF NOT EXISTS 'cashier01'@'localhost' IDENTIFIED BY <secret>
+2026-11-24T13:53:35.541525Z	    9 Query	CREATE USER IF NOT EXISTS 'analyst01'@'localhost' IDENTIFIED BY <secret>
+2026-11-24T14:00:29.648529Z	    9 Query	GRANT 'deshimart_cashier'@'localhost'
+TO 'cashier01'@'localhost'
+2026-11-24T14:01:23.535549Z	    9 Query	GRANT 'deshimart_cashier'@'localhost'
+TO 'cashier01'@'%'
+2026-11-24T14:01:51.407432Z	    9 Query	GRANT 'deshimart_cashier'@'%'
+TO 'cashier01'@'localhost'
+2026-11-24T14:01:55.064129Z	    9 Query	GRANT 'deshimart_analyst'@'%'
+TO 'analyst01'@'localhost'
+2026-11-24T14:03:13.055068Z	    9 Query	SET DEFAULT ROLE 'deshimart_cashier'@'%'
+TO 'cashier01'@'localhost'
+2026-11-24T14:03:23.614882Z	    9 Query	SET DEFAULT ROLE 'deshimart_analyst'@'%'
+TO 'analyst01'@'localhost'
+2026-11-24T14:03:30.378998Z	    9 Query	SHOW GRANTS FOR 'cashier01'@'localhost'
+2026-11-24T14:03:30.426132Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:03:30.428339Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 185
+2026-11-24T14:03:30.429439Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 185
+2026-11-24T14:03:51.298541Z	    9 Query	SHOW GRANTS FOR 'analyst01'@'localhost'
+2026-11-24T14:03:51.324678Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:03:51.326674Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 187
+2026-11-24T14:03:51.327502Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 187
+2026-11-24T14:07:18.745288Z	    9 Query	SHOW VARIABLES LIKE 'validate_password%'
+2026-11-24T14:07:18.815423Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:07:18.817172Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 189
+2026-11-24T14:07:18.818115Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 189
+2026-11-24T14:07:44.537074Z	    9 Query	SELECT * FROM INFORMATION_SCHEMA.PLUGINS
+WHERE PLUGIN_NAME LIKE '%validate%'
+LIMIT 0, 1000
+2026-11-24T14:07:44.617166Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:07:44.619235Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 191
+2026-11-24T14:07:44.620119Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 191
+2026-11-24T14:07:44.623213Z	    8 Query	SHOW INDEX FROM `INFORMATION_SCHEMA`.`PLUGINS`
+2026-11-24T14:08:01.126000Z	    9 Query	INSTALL COMPONENT 'file://component_validate_password'
+2026-11-24T14:08:20.270903Z	    9 Query	SHOW VARIABLES LIKE 'validate_password%'
+2026-11-24T14:08:20.297884Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:08:20.300461Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 196
+2026-11-24T14:08:20.301667Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 196
+2026-11-24T14:10:31.569284Z	    9 Query	SELECT VERSION()
+LIMIT 0, 1000
+2026-11-24T14:10:31.589202Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:10:31.590967Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 199
+2026-11-24T14:10:31.591717Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 199
+2026-11-24T14:10:56.464557Z	    9 Query	SHOW VARIABLES LIKE 'plugin_dir'
+2026-11-24T14:10:56.494511Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:10:56.496133Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 201
+2026-11-24T14:10:56.497028Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 201
+2026-11-24T14:13:25.428411Z	    9 Query	SELECT component_urn
+FROM mysql.component
+WHERE component_urn = 'file://component_validate_password'
+LIMIT 0, 1000
+2026-11-24T14:13:25.455377Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:13:25.457131Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 203
+2026-11-24T14:13:25.458026Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 203
+2026-11-24T14:13:25.460641Z	    8 Query	SHOW INDEX FROM `mysql`.`component`
+2026-11-24T14:22:53.287459Z	    9 Query	SHOW VARIABLES LIKE 'plugin_dir'
+2026-11-24T14:22:53.316140Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:22:53.317958Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 207
+2026-11-24T14:22:53.318959Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 207
+2026-11-24T14:25:34.666148Z	    9 Query	SELECT VERSION()
+LIMIT 0, 1000
+2026-11-24T14:25:34.695118Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:25:34.696767Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 209
+2026-11-24T14:25:34.697690Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 209
+2026-11-24T14:25:37.025915Z	    9 Query	SELECT VERSION()
+LIMIT 0, 1000
+2026-11-24T14:25:37.091642Z	    9 Query	SHOW VARIABLES LIKE 'plugin_dir'
+2026-11-24T14:25:44.660845Z	    9 Query	SELECT VERSION()
+LIMIT 0, 1000
+2026-11-24T14:25:44.681407Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:25:44.682920Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 214
+2026-11-24T14:25:44.683677Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 214
+2026-11-24T14:26:14.069224Z	    9 Query	SHOW VARIABLES LIKE 'plugin_dir'
+2026-11-24T14:26:14.099710Z	    8 Query	SELECT st.* FROM performance_schema.events_statements_current st JOIN performance_schema.threads thr ON thr.thread_id = st.thread_id WHERE thr.processlist_id = 9
+2026-11-24T14:26:14.101432Z	    8 Query	SELECT st.* FROM performance_schema.events_stages_history_long st WHERE st.nesting_event_id = 216
+2026-11-24T14:26:14.102349Z	    8 Query	SELECT st.* FROM performance_schema.events_waits_history_long st WHERE st.nesting_event_id = 216
+2026-11-24T15:38:53.882869Z	    9 Quit	
+2026-11-24T15:38:54.210318Z	    8 Quit	
+2026-11-24T15:38:58.574052Z	   10 Connect	root@localhost on  using SSL/TLS
+2026-11-24T15:38:58.790561Z	   10 Query	set autocommit=1
+2026-11-24T15:38:58.928011Z	   10 Query	SELECT current_user()
+2026-11-24T15:38:59.061899Z	   10 Query	SET CHARACTER SET utf8
+2026-11-24T15:38:59.171017Z	   10 Query	SET NAMES utf8
+2026-11-24T15:38:59.248105Z	   10 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:39:00.291129Z	   10 Query	SELECT CONNECTION_ID()
+2026-11-24T15:39:00.344033Z	   10 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:39:00.881113Z	   10 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:39:00.949955Z	   10 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:39:01.147287Z	   10 Query	set autocommit=1
+2026-11-24T15:39:01.258807Z	   11 Connect	root@localhost on  using SSL/TLS
+2026-11-24T15:39:01.268251Z	   11 Query	set autocommit=1
+2026-11-24T15:39:01.273992Z	   11 Query	SELECT current_user()
+2026-11-24T15:39:01.274455Z	   11 Query	SET CHARACTER SET utf8
+2026-11-24T15:39:01.274913Z	   11 Query	SET NAMES utf8
+2026-11-24T15:39:01.275379Z	   11 Query	SET SQL_SAFE_UPDATES=1
+2026-11-24T15:39:01.276073Z	   11 Query	SELECT CONNECTION_ID()
+2026-11-24T15:39:01.277888Z	   11 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:39:01.363294Z	   11 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:39:01.363746Z	   11 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:39:01.446581Z	   11 Query	set autocommit=1
+2026-11-24T15:39:01.446959Z	   11 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:39:01.497544Z	   11 Query	SHOW SESSION VARIABLES LIKE 'version_comment'
+2026-11-24T15:39:01.500368Z	   11 Query	SHOW SESSION VARIABLES LIKE 'version'
+2026-11-24T15:39:01.509042Z	   11 Query	SELECT current_user()
+2026-11-24T15:39:01.509528Z	   11 Query	SHOW SESSION VARIABLES LIKE 'lower_case_table_names'
+2026-11-24T15:39:02.348318Z	   10 Query	SHOW DATABASES
+2026-11-24T15:39:02.406660Z	   11 Query	show engines
+2026-11-24T15:39:02.518640Z	   11 Query	show charset
+2026-11-24T15:39:02.760034Z	   11 Query	show collation
+2026-11-24T15:39:02.960927Z	   11 Query	show variables
+2026-11-24T15:39:02.964894Z	   11 Query	SHOW SESSION VARIABLES LIKE 'version_compile_os'
+2026-11-24T15:39:02.967640Z	   11 Query	SHOW SESSION VARIABLES LIKE 'offline_mode'
+2026-11-24T15:39:03.818664Z	   11 Query	SHOW SESSION VARIABLES LIKE 'wait_timeout'
+2026-11-24T15:39:03.821578Z	   11 Query	SHOW SESSION VARIABLES LIKE 'interactive_timeout'
+2026-11-24T15:39:07.990648Z	   10 Query	SHOW FULL TABLES FROM `deshimart`
+2026-11-24T15:39:08.345529Z	   10 Query	SHOW PROCEDURE STATUS WHERE Db='deshimart'
+2026-11-24T15:39:08.583906Z	   10 Query	SHOW FUNCTION STATUS WHERE Db='deshimart'
+2026-11-24T15:39:08.627423Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`branches`
+2026-11-24T15:39:08.969697Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`categories`
+2026-11-24T15:39:08.971760Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`customers`
+2026-11-24T15:39:08.985038Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`digits`
+2026-11-24T15:39:09.002846Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_history`
+2026-11-24T15:39:09.005260Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_items`
+2026-11-24T15:39:09.007838Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`orders`
+2026-11-24T15:39:09.010912Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`payments`
+2026-11-24T15:39:09.013405Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`po_items`
+2026-11-24T15:39:09.209809Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`po_status_log`
+2026-11-24T15:39:09.244239Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`products`
+2026-11-24T15:39:09.284190Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`purchase_orders`
+2026-11-24T15:39:09.308278Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`staff`
+2026-11-24T15:39:09.343024Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`stock`
+2026-11-24T15:39:09.350518Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`suppliers`
+2026-11-24T15:39:09.353727Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`v_customers_masked`
+2026-11-24T15:39:09.377703Z	   11 Query	SHOW FULL COLUMNS FROM `deshimart`.`v_open_pos`
+2026-11-24T15:39:22.507783Z	   11 Quit	
+2026-11-24T15:39:22.508059Z	   10 Quit	
+2026-11-24T15:39:54.911540Z	   12 Connect	analyst01@localhost on  using SSL/TLS
+2026-11-24T15:39:54.957263Z	   12 Query	set autocommit=1
+2026-11-24T15:39:54.957633Z	   12 Query	SELECT current_user()
+2026-11-24T15:39:54.958057Z	   12 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:39:54.973020Z	   12 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:39:54.988678Z	   12 Query	SELECT version()
+2026-11-24T15:39:54.989271Z	   12 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:39:55.000597Z	   12 Quit	
+2026-11-24T15:40:03.492284Z	   13 Connect	analyst01@localhost on  using SSL/TLS
+2026-11-24T15:40:03.492782Z	   13 Query	set autocommit=1
+2026-11-24T15:40:03.493843Z	   13 Query	SELECT current_user()
+2026-11-24T15:40:03.494213Z	   13 Query	SET CHARACTER SET utf8
+2026-11-24T15:40:03.494595Z	   13 Query	SET NAMES utf8
+2026-11-24T15:40:03.494963Z	   13 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:40:03.515726Z	   13 Query	SELECT CONNECTION_ID()
+2026-11-24T15:40:03.516104Z	   13 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:40:03.517304Z	   13 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:40:03.518040Z	   13 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:40:03.520597Z	   13 Query	set autocommit=1
+2026-11-24T15:40:03.534013Z	   14 Connect	analyst01@localhost on  using SSL/TLS
+2026-11-24T15:40:03.534629Z	   14 Query	set autocommit=1
+2026-11-24T15:40:03.536881Z	   14 Query	SELECT current_user()
+2026-11-24T15:40:03.537372Z	   14 Query	SET CHARACTER SET utf8
+2026-11-24T15:40:03.537809Z	   14 Query	SET NAMES utf8
+2026-11-24T15:40:03.538126Z	   14 Query	SET SQL_SAFE_UPDATES=1
+2026-11-24T15:40:03.538420Z	   14 Query	SELECT CONNECTION_ID()
+2026-11-24T15:40:03.538785Z	   14 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:40:03.539980Z	   14 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:40:03.540352Z	   14 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:40:03.542085Z	   14 Query	set autocommit=1
+2026-11-24T15:40:03.542491Z	   14 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:40:03.545677Z	   14 Query	SHOW SESSION VARIABLES LIKE 'version_comment'
+2026-11-24T15:40:03.549047Z	   14 Query	SHOW SESSION VARIABLES LIKE 'version'
+2026-11-24T15:40:03.554147Z	   14 Query	SELECT current_user()
+2026-11-24T15:40:03.554749Z	   14 Query	SHOW SESSION VARIABLES LIKE 'lower_case_table_names'
+2026-11-24T15:40:04.137043Z	   13 Query	SHOW DATABASES
+2026-11-24T15:40:04.145972Z	   14 Query	show engines
+2026-11-24T15:40:04.146586Z	   14 Query	show charset
+2026-11-24T15:40:04.148097Z	   14 Query	show collation
+2026-11-24T15:40:04.153092Z	   14 Query	show variables
+2026-11-24T15:40:04.157330Z	   14 Query	SHOW SESSION VARIABLES LIKE 'version_compile_os'
+2026-11-24T15:40:04.161208Z	   14 Query	SHOW SESSION VARIABLES LIKE 'offline_mode'
+2026-11-24T15:40:04.177640Z	   14 Query	SHOW SESSION VARIABLES LIKE 'wait_timeout'
+2026-11-24T15:40:04.180365Z	   14 Query	SHOW SESSION VARIABLES LIKE 'interactive_timeout'
+2026-11-24T15:40:07.521089Z	   13 Query	SHOW FULL TABLES FROM `deshimart`
+2026-11-24T15:40:07.537883Z	   13 Query	SHOW PROCEDURE STATUS WHERE Db='deshimart'
+2026-11-24T15:40:07.540483Z	   13 Query	SHOW FUNCTION STATUS WHERE Db='deshimart'
+2026-11-24T15:40:07.542798Z	   14 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_items`
+2026-11-24T15:40:07.565795Z	   14 Query	SHOW FULL COLUMNS FROM `deshimart`.`payments`
+2026-11-24T15:40:07.568688Z	   14 Query	SHOW FULL COLUMNS FROM `deshimart`.`v_customers_masked`
+2026-11-24T15:40:27.526416Z	   13 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_items`
+2026-11-24T15:40:27.552154Z	   13 Query	SHOW INDEXES FROM `deshimart`.`order_items`
+2026-11-24T15:41:07.310866Z	   13 Query	SHOW FULL COLUMNS FROM `deshimart`.`payments`
+2026-11-24T15:41:07.313546Z	   13 Query	SHOW INDEXES FROM `deshimart`.`payments`
+2026-11-24T15:41:15.797459Z	   14 Quit	
+2026-11-24T15:41:15.797781Z	   13 Quit	
+2026-11-24T15:41:41.100948Z	   15 Connect	root@localhost on  using SSL/TLS
+2026-11-24T15:41:41.111742Z	   15 Query	set autocommit=1
+2026-11-24T15:41:41.116692Z	   15 Query	SELECT current_user()
+2026-11-24T15:41:41.117424Z	   15 Query	SET CHARACTER SET utf8
+2026-11-24T15:41:41.132608Z	   15 Query	SET NAMES utf8
+2026-11-24T15:41:41.133172Z	   15 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:41:41.144421Z	   15 Query	SELECT CONNECTION_ID()
+2026-11-24T15:41:41.144814Z	   15 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:41:41.152238Z	   15 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:41:41.153066Z	   15 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:41:41.154711Z	   15 Query	set autocommit=1
+2026-11-24T15:41:41.177164Z	   16 Connect	root@localhost on  using SSL/TLS
+2026-11-24T15:41:41.177819Z	   16 Query	set autocommit=1
+2026-11-24T15:41:41.184638Z	   16 Query	SELECT current_user()
+2026-11-24T15:41:41.186042Z	   16 Query	SET CHARACTER SET utf8
+2026-11-24T15:41:41.186724Z	   16 Query	SET NAMES utf8
+2026-11-24T15:41:41.187084Z	   16 Query	SET SQL_SAFE_UPDATES=1
+2026-11-24T15:41:41.187385Z	   16 Query	SELECT CONNECTION_ID()
+2026-11-24T15:41:41.187745Z	   16 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:41:41.291848Z	   16 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:41:41.292452Z	   16 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:41:41.322708Z	   16 Query	set autocommit=1
+2026-11-24T15:41:41.323761Z	   16 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:41:41.402305Z	   16 Query	SHOW SESSION VARIABLES LIKE 'version_comment'
+2026-11-24T15:41:41.406093Z	   16 Query	SHOW SESSION VARIABLES LIKE 'version'
+2026-11-24T15:41:41.410549Z	   16 Query	SELECT current_user()
+2026-11-24T15:41:41.410963Z	   16 Query	SHOW SESSION VARIABLES LIKE 'lower_case_table_names'
+2026-11-24T15:41:41.847846Z	   15 Query	SHOW DATABASES
+2026-11-24T15:41:41.848607Z	   16 Query	show engines
+2026-11-24T15:41:41.849154Z	   16 Query	show charset
+2026-11-24T15:41:41.850183Z	   16 Query	show collation
+2026-11-24T15:41:41.929979Z	   16 Query	show variables
+2026-11-24T15:41:41.933871Z	   16 Query	SHOW SESSION VARIABLES LIKE 'version_compile_os'
+2026-11-24T15:41:41.936741Z	   16 Query	SHOW SESSION VARIABLES LIKE 'offline_mode'
+2026-11-24T15:41:41.965353Z	   16 Query	SHOW SESSION VARIABLES LIKE 'wait_timeout'
+2026-11-24T15:41:41.968155Z	   16 Query	SHOW SESSION VARIABLES LIKE 'interactive_timeout'
+2026-11-24T15:43:29.980360Z	   16 Quit	
+2026-11-24T15:43:29.980683Z	   15 Quit	
+2026-11-24T15:44:00.545350Z	   17 Connect	cashier01@localhost on  using SSL/TLS
+2026-11-24T15:44:00.566987Z	   17 Query	set autocommit=1
+2026-11-24T15:44:00.570893Z	   17 Query	SELECT current_user()
+2026-11-24T15:44:00.571372Z	   17 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:44:00.572859Z	   17 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:44:00.573268Z	   17 Query	SELECT version()
+2026-11-24T15:44:00.573632Z	   17 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:44:00.575315Z	   17 Quit	
+2026-11-24T15:44:05.093843Z	   18 Connect	cashier01@localhost on  using SSL/TLS
+2026-11-24T15:44:05.094365Z	   18 Query	set autocommit=1
+2026-11-24T15:44:05.095581Z	   18 Query	SELECT current_user()
+2026-11-24T15:44:05.096025Z	   18 Query	SET CHARACTER SET utf8
+2026-11-24T15:44:05.096436Z	   18 Query	SET NAMES utf8
+2026-11-24T15:44:05.096846Z	   18 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:44:05.101408Z	   18 Query	SELECT CONNECTION_ID()
+2026-11-24T15:44:05.101828Z	   18 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:44:05.103184Z	   18 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:44:05.103712Z	   18 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:44:05.105829Z	   18 Query	set autocommit=1
+2026-11-24T15:44:05.119008Z	   19 Connect	cashier01@localhost on  using SSL/TLS
+2026-11-24T15:44:05.119543Z	   19 Query	set autocommit=1
+2026-11-24T15:44:05.119958Z	   19 Query	SELECT current_user()
+2026-11-24T15:44:05.120358Z	   19 Query	SET CHARACTER SET utf8
+2026-11-24T15:44:05.120790Z	   19 Query	SET NAMES utf8
+2026-11-24T15:44:05.121096Z	   19 Query	SET SQL_SAFE_UPDATES=1
+2026-11-24T15:44:05.121380Z	   19 Query	SELECT CONNECTION_ID()
+2026-11-24T15:44:05.121737Z	   19 Query	show character set where charset = 'utf8mb4'
+2026-11-24T15:44:05.123275Z	   19 Query	SET NAMES 'utf8mb4'
+2026-11-24T15:44:05.123668Z	   19 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T15:44:05.125885Z	   19 Query	set autocommit=1
+2026-11-24T15:44:05.126298Z	   19 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T15:44:05.131404Z	   19 Query	SHOW SESSION VARIABLES LIKE 'version_comment'
+2026-11-24T15:44:05.135510Z	   19 Query	SHOW SESSION VARIABLES LIKE 'version'
+2026-11-24T15:44:05.140435Z	   19 Query	SELECT current_user()
+2026-11-24T15:44:05.140896Z	   19 Query	SHOW SESSION VARIABLES LIKE 'lower_case_table_names'
+2026-11-24T15:44:05.741692Z	   18 Query	SHOW DATABASES
+2026-11-24T15:44:05.750423Z	   19 Query	show engines
+2026-11-24T15:44:05.751128Z	   19 Query	show charset
+2026-11-24T15:44:05.753215Z	   19 Query	show collation
+2026-11-24T15:44:05.757982Z	   19 Query	show variables
+2026-11-24T15:44:05.762498Z	   19 Query	SHOW SESSION VARIABLES LIKE 'version_compile_os'
+2026-11-24T15:44:05.765447Z	   19 Query	SHOW SESSION VARIABLES LIKE 'offline_mode'
+2026-11-24T15:44:05.791065Z	   19 Query	SHOW SESSION VARIABLES LIKE 'wait_timeout'
+2026-11-24T15:44:05.793882Z	   19 Query	SHOW SESSION VARIABLES LIKE 'interactive_timeout'
+2026-11-24T15:44:13.936060Z	   18 Query	SHOW FULL TABLES FROM `deshimart`
+2026-11-24T15:44:13.940377Z	   18 Query	SHOW PROCEDURE STATUS WHERE Db='deshimart'
+2026-11-24T15:44:13.959909Z	   18 Query	SHOW FUNCTION STATUS WHERE Db='deshimart'
+2026-11-24T15:44:13.961888Z	   19 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_items`
+2026-11-24T15:44:13.969654Z	   19 Query	SHOW FULL COLUMNS FROM `deshimart`.`orders`
+2026-11-24T15:44:13.971769Z	   19 Query	SHOW FULL COLUMNS FROM `deshimart`.`products`
+2026-11-24T15:44:13.974169Z	   19 Query	SHOW FULL COLUMNS FROM `deshimart`.`stock`
+2026-11-24T15:44:19.211827Z	   18 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_items`
+2026-11-24T15:44:19.214731Z	   18 Query	SHOW INDEXES FROM `deshimart`.`order_items`
+2026-11-24T15:44:31.916440Z	   18 Query	SHOW FULL COLUMNS FROM `deshimart`.`orders`
+2026-11-24T15:44:31.919609Z	   18 Query	SHOW INDEXES FROM `deshimart`.`orders`
+2026-11-24T15:44:34.595846Z	   18 Query	SHOW FULL COLUMNS FROM `deshimart`.`products`
+2026-11-24T15:44:34.598520Z	   18 Query	SHOW INDEXES FROM `deshimart`.`products`
+2026-11-24T15:44:53.269433Z	   19 Query	USE deshimart
+2026-11-24T15:44:53.322003Z	   19 Query	SELECT DATABASE()
+2026-11-24T15:45:08.099837Z	   19 Query	select * from orders
+LIMIT 0, 1000
+2026-11-24T15:47:39.858707Z	   19 Query	insert into order_items(order_id, line_no, product_id,qty,unit_price)values(1,2,1,1,120)
+2026-11-24T15:48:04.363443Z	   19 Query	SELECT * FROM deshimart.orders
+LIMIT 0, 1000
+2026-11-24T15:48:33.059955Z	   18 Query	SHOW FULL COLUMNS FROM `deshimart`.`stock`
+2026-11-24T15:48:33.062751Z	   18 Query	SHOW INDEXES FROM `deshimart`.`stock`
+2026-11-24T17:51:50.770273Z	   19 Quit	
+2026-11-24T17:51:51.110999Z	   18 Quit	
+2026-11-24T17:51:55.525658Z	   20 Connect	root@localhost on  using SSL/TLS
+2026-11-24T17:51:55.694259Z	   20 Query	set autocommit=1
+2026-11-24T17:51:55.873057Z	   20 Query	SELECT current_user()
+2026-11-24T17:51:55.984944Z	   20 Query	SET CHARACTER SET utf8
+2026-11-24T17:51:56.109467Z	   20 Query	SET NAMES utf8
+2026-11-24T17:51:56.219331Z	   20 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T17:51:56.974746Z	   20 Query	SELECT CONNECTION_ID()
+2026-11-24T17:51:57.018491Z	   20 Query	show character set where charset = 'utf8mb4'
+2026-11-24T17:51:57.588186Z	   20 Query	SET NAMES 'utf8mb4'
+2026-11-24T17:51:57.650417Z	   20 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T17:51:57.877230Z	   20 Query	set autocommit=1
+2026-11-24T17:51:57.939799Z	   21 Connect	root@localhost on  using SSL/TLS
+2026-11-24T17:51:57.940386Z	   21 Query	set autocommit=1
+2026-11-24T17:51:57.944820Z	   21 Query	SELECT current_user()
+2026-11-24T17:51:57.945235Z	   21 Query	SET CHARACTER SET utf8
+2026-11-24T17:51:57.945681Z	   21 Query	SET NAMES utf8
+2026-11-24T17:51:57.945956Z	   21 Query	SET SQL_SAFE_UPDATES=1
+2026-11-24T17:51:57.951468Z	   21 Query	SELECT CONNECTION_ID()
+2026-11-24T17:51:57.951897Z	   21 Query	show character set where charset = 'utf8mb4'
+2026-11-24T17:51:57.968980Z	   21 Query	SET NAMES 'utf8mb4'
+2026-11-24T17:51:57.969328Z	   21 Query	SHOW SESSION STATUS LIKE 'Ssl_cipher'
+2026-11-24T17:51:57.980876Z	   21 Query	set autocommit=1
+2026-11-24T17:51:57.981248Z	   21 Query	SHOW SESSION VARIABLES LIKE 'sql_mode'
+2026-11-24T17:51:58.061877Z	   21 Query	SHOW SESSION VARIABLES LIKE 'version_comment'
+2026-11-24T17:51:58.064663Z	   21 Query	SHOW SESSION VARIABLES LIKE 'version'
+2026-11-24T17:51:58.071825Z	   21 Query	SELECT current_user()
+2026-11-24T17:51:58.072347Z	   21 Query	SHOW SESSION VARIABLES LIKE 'lower_case_table_names'
+2026-11-24T17:51:59.148591Z	   20 Query	SHOW DATABASES
+2026-11-24T17:51:59.189742Z	   21 Query	show engines
+2026-11-24T17:51:59.236040Z	   21 Query	show charset
+2026-11-24T17:51:59.333939Z	   21 Query	show collation
+2026-11-24T17:51:59.472520Z	   21 Query	show variables
+2026-11-24T17:51:59.477085Z	   21 Query	SHOW SESSION VARIABLES LIKE 'version_compile_os'
+2026-11-24T17:51:59.479825Z	   21 Query	SHOW SESSION VARIABLES LIKE 'offline_mode'
+2026-11-24T17:51:59.742998Z	   21 Query	SHOW SESSION VARIABLES LIKE 'wait_timeout'
+2026-11-24T17:51:59.745827Z	   21 Query	SHOW SESSION VARIABLES LIKE 'interactive_timeout'
+2026-11-24T18:24:06.005651Z	   20 Query	SHOW FULL TABLES FROM `deshimart`
+2026-11-24T18:24:08.489323Z	   20 Query	SHOW PROCEDURE STATUS WHERE Db='deshimart'
+2026-11-24T18:24:08.835996Z	   20 Query	SHOW FUNCTION STATUS WHERE Db='deshimart'
+2026-11-24T18:24:09.089911Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`branches`
+2026-11-24T18:24:09.366885Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`categories`
+2026-11-24T18:24:09.369547Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`customers`
+2026-11-24T18:24:09.396804Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`digits`
+2026-11-24T18:24:09.398863Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_history`
+2026-11-24T18:24:09.401739Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`order_items`
+2026-11-24T18:24:09.404199Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`orders`
+2026-11-24T18:24:09.406380Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`payments`
+2026-11-24T18:24:09.408572Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`po_items`
+2026-11-24T18:24:09.412954Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`po_status_log`
+2026-11-24T18:24:09.438112Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`products`
+2026-11-24T18:24:09.442415Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`purchase_orders`
+2026-11-24T18:24:09.447347Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`staff`
+2026-11-24T18:24:09.455723Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`stock`
+2026-11-24T18:24:09.459654Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`suppliers`
+2026-11-24T18:24:09.474865Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`v_customers_masked`
+2026-11-24T18:24:09.479548Z	   21 Query	SHOW FULL COLUMNS FROM `deshimart`.`v_open_pos`
+2026-11-24T18:24:18.004152Z	   21 Query	DROP DATABASE `deshimart`
+2026-11-24T18:30:54.579139Z	   21 Query	SET GLOBAL log_output = 'FILE'
+2026-11-24T18:30:54.879234Z	   21 Query	SET GLOBAL general_log_file = 'D:/Database/job01/script.log'
