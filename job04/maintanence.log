@@ -35,3 +35,8 @@ LIMIT 0, 1000
 2026-11-25T18:33:21.685493Z	    8 Query	SHOW INDEX FROM `performance_schema`.`threads`
 2026-11-25T18:38:49.322929Z	    9 Quit	
 2026-11-25T18:38:49.391255Z	    8 Quit	
+2026-11-25T18:40:43.256611Z	   10 Connect	root@localhost on blood_trace using TCP/IP
+2026-11-25T18:41:20.537505Z	   10 Query	SELECT TABLE_COMMENT "comment",TABLE_NAME "name",TABLE_ROWS "table_rows",`AUTO_INCREMENT` "auto_increment",
+        row_format "row_format",DATA_LENGTH "data_length",INDEX_LENGTH "index_length",TABLE_COLLATION "collation",
+        TABLE_TYPE "view_group",`ENGINE` engine
+        FROM information_schema.TABLES  WHERE TABLE_SCHEMA = 'blood_trace' and TABLE_TYPE<>'VIEW' ORDER BY TABLE_NAME
